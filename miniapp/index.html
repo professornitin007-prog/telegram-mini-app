@@ -375,12 +375,17 @@ tg.expand();
 console.log(tg.initDataUnsafe);
 
 function openNNL(){
-    document.querySelector('.container').style.display = 'none';
-    document.getElementById('nnlPage').style.display = 'block';
-}
 
-</script>
+    document.querySelectorAll('.course-card').forEach(card=>{
+        card.style.display='none';
+    });
 
+    document.querySelector('.search-box').style.display='none';
+    document.querySelector('.course-count').style.display='none';
+    document.querySelector('.big-title').style.display='none';
+
+    document.getElementById('nnlPage').style.display='block';
+} 
 </script>
 
 </body>
