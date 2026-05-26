@@ -9,7 +9,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         [
             InlineKeyboardButton(
                 "Open My Course",
-                web_app=WebAppInfo(url="https://telegram-mini-app-two-xi.vercel.app/")
+                web_app=WebAppInfo(url="https://telegram-mini-app-two-xi.vercel.app")
             )
         ]
     ]
