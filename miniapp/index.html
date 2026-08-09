@@ -779,9 +779,82 @@
     margin-left: 10px;
 }
 
+.page {
+    padding: 15px;
+}
+
+.top-card {
+    background: white;
+    padding: 25px;
+    border-radius: 22px;
+    margin-bottom: 18px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+}
+
+.top-card button {
+    border: none;
+    background: #eeeaff;
+    color: #4b2aad;
+    padding: 14px 20px;
+    border-radius: 18px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.top-card h1 {
+    font-size: 30px;
+    margin-bottom: 10px;
+}
+
+.course-card,
+.test-card,
+.mode-card,
+.question-card {
+
+    background: white;
+    padding: 22px;
+    border-radius: 22px;
+    margin: 15px 0;
+
+    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+
+    cursor: pointer;
+}
+
+.course-card h2,
+.test-card h2,
+.mode-card h2 {
+    margin: 0 0 8px;
+}
+
+.course-card p,
+.test-card p,
+.mode-card p {
+    margin: 5px 0;
+    color: #555;
+    font-size: 17px;
+}
+
+.question-card h2 {
+    margin-top: 0;
+}
+
+.option {
+    background: #f5f5f5;
+    padding: 15px;
+    border-radius: 12px;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+.option:hover {
+    background: #eeeaff;
+}
 
 
-    </style>
+</style>
+
 </head>
 
 
@@ -1245,7 +1318,128 @@
     </main>
 
 
-    <div class="bottom-space"></div>
+<!-- ================= TEST SERIES PAGE ================= -->
+
+<div id="testSeriesPage" class="page" style="display:none;">
+
+    <div class="top-card">
+
+        <button onclick="goHome()">← Back</button>
+
+        <h1>3 Degree Test Series</h1>
+
+        <p>Path: 3 Degree Test Series</p>
+
+        <p>Choose sub folder or category</p>
+
+    </div>
+
+    <div class="course-card" onclick="openTestFolder()">
+
+        <h2>📁 Test (1–20)</h2>
+
+        <p>1 category • 1 test • 100 questions</p>
+
+    </div>
+
+</div>
+
+
+<!-- ================= TEST FOLDER PAGE ================= -->
+
+<div id="testFolderPage" class="page" style="display:none;">
+
+    <div class="top-card">
+
+        <button onclick="openTestSeriesPage()">← Back</button>
+
+        <h1>Test (1–20)</h1>
+
+        <p>Choose test</p>
+
+    </div>
+
+    <div class="test-card" onclick="openTest1()">
+
+        <h2>1. Test 1</h2>
+
+        <p>100 questions</p>
+
+    </div>
+
+</div>
+
+
+<!-- ================= CHOOSE PATTERN ================= -->
+
+<div id="patternPage" class="page" style="display:none;">
+
+    <div class="top-card">
+
+        <button onclick="openTestFolder()">← Back</button>
+
+        <h1>Choose Pattern</h1>
+
+        <p>Select mode to start</p>
+
+    </div>
+
+
+    <div class="mode-card" onclick="openReviewMode()">
+
+        <h2>📖 Review Mode</h2>
+
+        <p>
+            Question-wise submit, instant answer,
+            solution button.
+        </p>
+
+    </div>
+
+
+    <div class="mode-card" onclick="openPracticeMode()">
+
+        <h2>⏱️ Practice Mode</h2>
+
+        <p>
+            Timed test, minus marking, review later,
+            final report.
+        </p>
+
+    </div>
+
+
+    <div class="mode-card" onclick="openPerformance()">
+
+        <h2>📊 View Performance</h2>
+
+        <p>Last 7 days results.</p>
+
+    </div>
+
+</div>
+
+
+<!-- ================= QUESTIONS ================= -->
+
+<div id="questionsPage" class="page" style="display:none;">
+
+    <div class="top-card">
+
+        <button onclick="openPattern()">← Back</button>
+
+        <h1>Test 1</h1>
+
+        <p>100 questions</p>
+
+    </div>
+
+    <div id="questionList"></div>
+
+</div>
+
+
+<div class="bottom-space"></div>
 
 
 </div>
@@ -1821,6 +2015,222 @@
     `;
 }
 
+
+/* =========================================
+   TEST LIST
+========================================= */
+
+function openTestList() {
+
+    const pageContent =
+        document.getElementById("pageContent");
+
+    pageContent.innerHTML = `
+
+        <section class="folder-page">
+
+            <!-- HEADER -->
+
+            <div class="folder-header">
+
+                <button
+                    class="back-button"
+                    onclick="openThreeDegreeSeries()"
+                >
+                    ← Back
+                </button>
+
+                <h1>3 Degree Test Series</h1>
+
+                <p>
+                    Test(1-20)
+                </p>
+
+                <p>
+                    1 test available
+                </p>
+
+            </div>
+
+
+            <!-- TEST 1 -->
+
+            <div
+                class="folder-card"
+                onclick="openTestPattern()"
+            >
+
+                <div class="folder-info">
+
+                    <div class="folder-title">
+                        1. Test 1
+                    </div>
+
+                    <div class="folder-meta">
+                        100 questions
+                    </div>
+
+                </div>
+
+                <div class="folder-arrow">
+                    ›
+                </div>
+
+            </div>
+
+        </section>
+
+    `;
+}
+
+
+/* =========================================
+   TEST PATTERN
+========================================= */
+
+function openTestPattern() {
+
+    const pageContent =
+        document.getElementById("pageContent");
+
+    pageContent.innerHTML = `
+
+        <section class="folder-page">
+
+            <!-- HEADER -->
+
+            <div class="folder-header">
+
+                <button
+                    class="back-button"
+                    onclick="openTestList()"
+                >
+                    ← Back
+                </button>
+
+                <h1>Choose Pattern</h1>
+
+                <p>
+                    Select mode to start
+                </p>
+
+            </div>
+
+
+            <!-- REVIEW MODE -->
+
+            <div
+                class="folder-card"
+                onclick="startReviewMode()"
+            >
+
+                <div class="folder-info">
+
+                    <div class="folder-title">
+                        📖 Review Mode
+                    </div>
+
+                    <div class="folder-meta">
+                        Question-wise submit, instant answer, solution button.
+                    </div>
+
+                </div>
+
+                <div class="folder-arrow">
+                    ›
+                </div>
+
+            </div>
+
+
+            <!-- PRACTICE MODE -->
+
+            <div
+                class="folder-card"
+                onclick="startPracticeMode()"
+            >
+
+                <div class="folder-info">
+
+                    <div class="folder-title">
+                        ⏱ Practice Mode
+                    </div>
+
+                    <div class="folder-meta">
+                        Timed test, minus marking, review later, final report.
+                    </div>
+
+                </div>
+
+                <div class="folder-arrow">
+                    ›
+                </div>
+
+            </div>
+
+
+            <!-- PERFORMANCE -->
+
+            <div
+                class="folder-card"
+                onclick="viewPerformance()"
+            >
+
+                <div class="folder-info">
+
+                    <div class="folder-title">
+                        📊 View Performance
+                    </div>
+
+                    <div class="folder-meta">
+                        Last 7 days results.
+                    </div>
+
+                </div>
+
+                <div class="folder-arrow">
+                    ›
+                </div>
+
+            </div>
+
+        </section>
+
+    `;
+}
+
+
+/* =========================================
+   REVIEW MODE
+========================================= */
+
+function startReviewMode() {
+
+    alert("Review Mode selected — 100 questions will open here.");
+
+}
+
+
+/* =========================================
+   PRACTICE MODE
+========================================= */
+
+function startPracticeMode() {
+
+    alert("Practice Mode selected — 100 questions will open here.");
+
+}
+
+
+/* =========================================
+   PERFORMANCE
+========================================= */
+
+function viewPerformance() {
+
+    alert("Performance report will appear here.");
+
+}
 
 
     /* =========================================
