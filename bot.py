@@ -1,7 +1,11 @@
+import os
+
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, WebAppInfo
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 
-TOKEN = "8638894950:AAGICO_hfb2YogDeJf06x7PPPIDPqG28Hx0"
+
+TOKEN = os.getenv("BOT_TOKEN")
+
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
@@ -9,7 +13,9 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         [
             InlineKeyboardButton(
                 "Open My Course",
-                web_app=WebAppInfo(url="https://telegram-mini-app-two-xi.vercel.app")
+                web_app=WebAppInfo(
+                    url="https://telegram-mini-app-two-xi.vercel.app"
+                )
             )
         ]
     ]
@@ -21,9 +27,11 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         reply_markup=reply_markup
     )
 
+
 app = ApplicationBuilder().token(TOKEN).build()
 
 app.add_handler(CommandHandler("start", start))
 
 print("Bot Running...")
+
 app.run_polling()
