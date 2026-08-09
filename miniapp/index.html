@@ -1,419 +1,1554 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta charset="UTF-8">
 
-<title>Study Dashboard</title>
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    >
 
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <title>NorcetIQ Quiz</title>
 
-<link
-rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-/>
+    <!-- Telegram Mini App -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
-<style>
+    <!-- Font Awesome -->
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    >
 
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Arial, sans-serif;
-}
+    <style>
 
-body{
-    background:#f5f5f5;
-    color:#111827;
-}
+        /* =========================================
+           GLOBAL
+        ========================================= */
 
-/* TOP BAR */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
 
-.topbar{
-    background:#ffffff;
-    padding:18px 20px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    border-bottom:1px solid #e5e7eb;
-    position:sticky;
-    top:0;
-    z-index:1000;
-}
+        :root {
+            --purple: #6337d6;
+            --purple-light: #eee7ff;
+            --purple-border: #7040df;
 
-.nav-left{
-    display:flex;
-    gap:25px;
-    align-items:center;
-}
+            --background: #f8f4fa;
+            --surface: #ffffff;
+            --surface-2: #faf7fc;
 
-.nav-item{
-    display:flex;
-    align-items:center;
-    gap:8px;
-    font-size:18px;
-    color:#6b7280;
-    cursor:pointer;
-    padding-bottom:12px;
-}
+            --text: #33273a;
+            --text-light: #7d6f83;
+            --border: #eadfea;
 
-.active{
-    color:#2563eb;
-    border-bottom:3px solid #2563eb;
-}
+            --danger: #e53935;
 
-.profile{
-    width:42px;
-    height:42px;
-    border-radius:50%;
-    background:#fb7185;
-    color:white;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-weight:bold;
-    font-size:20px;
-}
+            --shadow: 0 2px 10px rgba(80, 50, 100, 0.06);
+        }
 
-/* MAIN */
+        body.dark {
+            --purple: #9b72ff;
+            --purple-light: #241a38;
+            --purple-border: #9b72ff;
 
-.container{
-    padding:25px 20px;
-}
+            --background: #0e0e11;
+            --surface: #18181c;
+            --surface-2: #202025;
 
-.small-title{
-    color:#6b7280;
-    margin-bottom:15px;
-    font-size:18px;
-}
+            --text: #f5f2f7;
+            --text-light: #aaa2b0;
+            --border: #302d34;
 
-.big-title{
-    font-size:48px;
-    font-weight:700;
-    margin-bottom:15px;
-}
+            --shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+        }
 
-.course-count{
-    font-size:22px;
-    color:#6b7280;
-    margin-bottom:30px;
-}
+        html,
+        body {
+            width: 100%;
+            min-height: 100%;
+        }
 
-/* SEARCH */
+        body {
+            font-family:
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                Roboto,
+                Helvetica,
+                Arial,
+                sans-serif;
 
-.search-box{
-    background:white;
-    border:2px solid #2563eb;
-    border-radius:18px;
-    padding:18px;
-    display:flex;
-    align-items:center;
-    gap:15px;
-    margin-bottom:35px;
-}
+            background: var(--background);
+            color: var(--text);
 
-.search-box input{
-    border:none;
-    outline:none;
-    width:100%;
-    font-size:24px;
-}
+            transition:
+                background 0.25s ease,
+                color 0.25s ease;
 
-/* CARD */
+            overflow-x: hidden;
+        }
 
-.course-card{
-    background:white;
-    border-radius:28px;
-    padding:25px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:30px;
-    box-shadow:0 2px 10px rgba(0,0,0,0.08);
-}
+        button {
+            font-family: inherit;
+        }
 
-.course-left{
-    width:55%;
-}
 
-.course-small{
-    color:#6b7280;
-    font-size:22px;
-    margin-bottom:10px;
-}
+        /* =========================================
+           APP
+        ========================================= */
 
-.course-title{
-    font-size:40px;
-    font-weight:700;
-    margin-bottom:20px;
-}
+        .app {
+            width: 100%;
+            max-width: 700px;
+            min-height: 100vh;
+            margin: 0 auto;
+            background: var(--background);
+        }
 
-.batch{
-    background:#eef2ff;
-    color:#6b7280;
-    display:inline-block;
-    padding:12px 20px;
-    border-radius:12px;
-    font-size:22px;
-}
 
-.course-image{
-    width:220px;
-    height:220px;
-    border-radius:22px;
-    object-fit:cover;
-}
+        /* =========================================
+           TOP HEADER
+        ========================================= */
 
-/* MOBILE */
+        .top-header {
+            height: 78px;
 
-@media(max-width:768px){
+            display: flex;
+            align-items: center;
 
-    .big-title{
-        font-size:30px;
-    }
+            padding: 12px 14px;
 
-    .course-count{
-        font-size:18px;
-    }
+            gap: 10px;
 
-    .search-box input{
-        font-size:18px;
-    }
+            background: var(--surface);
 
-    .course-card{
-        flex-direction:row;
-        gap:15px;
-    }
+            border-bottom: 1px solid var(--border);
 
-    .course-small{
-        font-size:16px;
-    }
+            position: sticky;
+            top: 0;
+            z-index: 100;
 
-    .course-title{
-        font-size:18px;
-    }
+            transition: background 0.25s ease;
+        }
 
-    .batch{
-        font-size:14px;
-        padding:8px 12px;
-    }
 
-    .course-image{
-        width:120px;
-        height:120px;
-    }
+        /* Purple plus logo */
 
-    .nav-item{
-        font-size:15px;
-    }
-}
+        .brand-logo {
+            width: 48px;
+            height: 48px;
 
-</style>
+            flex-shrink: 0;
+
+            background: var(--purple);
+
+            color: white;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 15px;
+
+            font-size: 22px;
+            font-weight: 700;
+
+            box-shadow:
+                0 4px 10px rgba(99, 55, 214, 0.18);
+        }
+
+
+        /* Brand name */
+
+        .brand-name {
+            display: flex;
+            align-items: center;
+
+            gap: 7px;
+
+            min-width: 0;
+            flex: 1;
+        }
+
+        .brand-title {
+            font-size: 18px;
+            font-weight: 700;
+
+            color: var(--text);
+
+            white-space: nowrap;
+        }
+
+
+        /* PRO */
+
+        .pro-badge {
+            background: var(--purple);
+
+            color: white;
+
+            padding: 4px 9px;
+
+            border-radius: 20px;
+
+            font-size: 11px;
+            font-weight: 800;
+
+            letter-spacing: 0.3px;
+        }
+
+
+        /* Header buttons */
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+
+            gap: 7px;
+        }
+
+        .header-btn {
+            width: 45px;
+            height: 45px;
+
+            border: 1px solid var(--border);
+
+            background: var(--surface);
+
+            color: var(--text);
+
+            border-radius: 14px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 17px;
+
+            cursor: pointer;
+
+            position: relative;
+
+            transition:
+                transform 0.15s ease,
+                background 0.2s ease;
+        }
+
+        .header-btn:active {
+            transform: scale(0.93);
+        }
+
+
+        /* Notification number */
+
+        .notification-count {
+            position: absolute;
+
+            top: -4px;
+            right: -3px;
+
+            min-width: 18px;
+            height: 18px;
+
+            padding: 0 4px;
+
+            border-radius: 20px;
+
+            background: var(--danger);
+
+            color: white;
+
+            font-size: 10px;
+            font-weight: 700;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border: 2px solid var(--surface);
+        }
+
+
+        /* =========================================
+           MAIN NAVIGATION
+        ========================================= */
+
+        .main-nav {
+            display: grid;
+
+            grid-template-columns:
+                repeat(5, 1fr);
+
+            gap: 7px;
+
+            padding: 8px 8px 9px;
+
+            background: var(--surface);
+
+            border-bottom: 1px solid var(--border);
+
+            position: sticky;
+            top: 78px;
+            z-index: 90;
+        }
+
+
+        .nav-item {
+            min-height: 78px;
+
+            display: flex;
+            flex-direction: column;
+
+            align-items: center;
+            justify-content: center;
+
+            gap: 6px;
+
+            border: 1.5px solid transparent;
+
+            border-radius: 17px;
+
+            color: var(--text-light);
+
+            cursor: pointer;
+
+            transition:
+                background 0.2s ease,
+                border 0.2s ease,
+                color 0.2s ease,
+                transform 0.15s ease;
+        }
+
+        .nav-item:active {
+            transform: scale(0.96);
+        }
+
+
+        .nav-item i {
+            font-size: 21px;
+        }
+
+        .nav-item span {
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+
+        /* Active navigation */
+
+        .nav-item.active {
+            border-color: var(--purple-border);
+
+            color: var(--purple);
+
+            background: var(--surface-2);
+        }
+
+        .nav-item.active span {
+            font-weight: 700;
+        }
+
+
+        /* =========================================
+           PAGE CONTENT
+        ========================================= */
+
+        .page {
+            padding: 18px 15px 35px;
+        }
+
+
+        /* Home introduction card */
+
+        .home-intro {
+            background: var(--surface);
+
+            border: 1px solid var(--border);
+
+            border-radius: 24px;
+
+            padding: 24px 21px;
+
+            margin-bottom: 15px;
+
+            box-shadow: var(--shadow);
+        }
+
+        .home-heading {
+            display: flex;
+            align-items: center;
+
+            gap: 10px;
+
+            font-size: 29px;
+            font-weight: 750;
+
+            color: var(--text);
+
+            margin-bottom: 9px;
+        }
+
+        .home-heading i {
+            color: var(--purple);
+            font-size: 27px;
+        }
+
+        .home-subtitle {
+            color: var(--text-light);
+
+            font-size: 15px;
+
+            line-height: 1.5;
+        }
+
+
+        /* =========================================
+           SECTION TITLE
+        ========================================= */
+
+        .section-heading {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            margin: 20px 3px 10px;
+        }
+
+        .section-heading h2 {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .section-heading span {
+            font-size: 12px;
+            color: var(--text-light);
+        }
+
+
+        /* =========================================
+           COURSE / TEST CATEGORY CARD
+        ========================================= */
+
+        .course-card {
+            width: 100%;
+
+            background: var(--surface);
+
+            border: 1px solid var(--border);
+
+            border-radius: 21px;
+
+            padding: 18px;
+
+            margin-bottom: 12px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            cursor: pointer;
+
+            box-shadow: var(--shadow);
+
+            transition:
+                transform 0.15s ease,
+                border 0.2s ease;
+        }
+
+        .course-card:active {
+            transform: scale(0.985);
+
+            border-color: var(--purple);
+        }
+
+        .course-info {
+            min-width: 0;
+
+            padding-right: 10px;
+        }
+
+        .course-name {
+            font-size: 18px;
+
+            font-weight: 700;
+
+            color: var(--text);
+
+            margin-bottom: 6px;
+        }
+
+        .course-description {
+            font-size: 13px;
+
+            color: var(--text-light);
+
+            line-height: 1.45;
+        }
+
+        .course-meta {
+            display: flex;
+
+            gap: 7px;
+
+            margin-top: 11px;
+
+            flex-wrap: wrap;
+        }
+
+        .meta-badge {
+            background: var(--purple-light);
+
+            color: var(--purple);
+
+            padding: 5px 9px;
+
+            border-radius: 10px;
+
+            font-size: 11px;
+
+            font-weight: 600;
+        }
+
+
+        /* Right arrow */
+
+        .course-arrow {
+            width: 37px;
+            height: 37px;
+
+            flex-shrink: 0;
+
+            border-radius: 12px;
+
+            background: var(--purple-light);
+
+            color: var(--purple);
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+
+        /* =========================================
+           PLACEHOLDER PAGES
+        ========================================= */
+
+        .placeholder-page {
+            min-height: 55vh;
+
+            display: flex;
+            flex-direction: column;
+
+            align-items: center;
+            justify-content: center;
+
+            text-align: center;
+        }
+
+        .placeholder-icon {
+            width: 75px;
+            height: 75px;
+
+            border-radius: 22px;
+
+            background: var(--purple-light);
+
+            color: var(--purple);
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 30px;
+
+            margin-bottom: 18px;
+        }
+
+        .placeholder-page h2 {
+            font-size: 22px;
+
+            margin-bottom: 7px;
+        }
+
+        .placeholder-page p {
+            color: var(--text-light);
+
+            font-size: 14px;
+        }
+
+
+        /* =========================================
+           TELEGRAM SAFE AREA
+        ========================================= */
+
+        .bottom-space {
+            height: 20px;
+        }
+
+
+        /* =========================================
+           SMALL PHONES
+        ========================================= */
+
+        @media (max-width: 390px) {
+
+            .top-header {
+                padding-left: 10px;
+                padding-right: 10px;
+
+                gap: 7px;
+            }
+
+            .brand-logo {
+                width: 43px;
+                height: 43px;
+
+                border-radius: 13px;
+            }
+
+            .brand-title {
+                font-size: 15px;
+            }
+
+            .pro-badge {
+                font-size: 9px;
+                padding: 4px 7px;
+            }
+
+            .header-actions {
+                gap: 4px;
+            }
+
+            .header-btn {
+                width: 39px;
+                height: 39px;
+
+                border-radius: 12px;
+
+                font-size: 15px;
+            }
+
+            .main-nav {
+                gap: 3px;
+                padding-left: 4px;
+                padding-right: 4px;
+            }
+
+            .nav-item {
+                min-height: 70px;
+
+                border-radius: 14px;
+            }
+
+            .nav-item i {
+                font-size: 18px;
+            }
+
+            .nav-item span {
+                font-size: 9px;
+            }
+
+            .home-heading {
+                font-size: 25px;
+            }
+        }
+
+    </style>
 </head>
+
 
 <body>
 
-<!-- TOP BAR -->
+<div class="app">
 
-<div class="topbar">
 
-    <div class="nav-left">
+    <!-- =====================================
+         TOP HEADER
+    ====================================== -->
 
-        <div class="nav-item active" onclick="openHome(this)">
+    <header class="top-header">
+
+        <!-- PLUS LOGO -->
+
+        <div class="brand-logo">
+            <i class="fa-solid fa-plus"></i>
+        </div>
+
+
+        <!-- BRAND -->
+
+        <div class="brand-name">
+
+            <div class="brand-title">
+                NorcetIQ Quiz
+            </div>
+
+            <div class="pro-badge">
+                PRO
+            </div>
+
+        </div>
+
+
+        <!-- HEADER ACTIONS -->
+
+        <div class="header-actions">
+
+
+            <!-- THEME -->
+
+            <button
+                class="header-btn"
+                id="themeButton"
+                onclick="toggleTheme()"
+                aria-label="Change theme"
+            >
+                <i
+                    id="themeIcon"
+                    class="fa-solid fa-sun"
+                ></i>
+            </button>
+
+
+            <!-- NOTIFICATION -->
+
+            <button
+                class="header-btn"
+                onclick="openNotifications()"
+                aria-label="Notifications"
+            >
+
+                <i class="fa-solid fa-bell"></i>
+
+                <span class="notification-count">
+                    7
+                </span>
+
+            </button>
+
+
+            <!-- PROFILE -->
+
+            <button
+                class="header-btn"
+                onclick="openProfile()"
+                aria-label="Profile"
+            >
+
+                <i class="fa-solid fa-user"></i>
+
+            </button>
+
+
+        </div>
+
+    </header>
+
+
+
+    <!-- =====================================
+         NAVIGATION
+    ====================================== -->
+
+    <nav class="main-nav">
+
+
+        <!-- HOME -->
+
+        <div
+            class="nav-item active"
+            onclick="changePage('home', this)"
+        >
+
             <i class="fa-solid fa-house"></i>
-            <span>Home</span>
+
+            <span>
+                Home
+            </span>
+
         </div>
 
-        <div class="nav-item" onclick="openNNL(this)">
-            <i class="fa-regular fa-user"></i>
-            <span>Test Series</span>
+
+        <!-- PERFORMANCE -->
+
+        <div
+            class="nav-item"
+            onclick="changePage('performance', this)"
+        >
+
+            <i class="fa-solid fa-chart-column"></i>
+
+            <span>
+                Performance
+            </span>
+
         </div>
 
-        <div class="nav-item">
-            <i class="fa-solid fa-book-open"></i>
-            <span>My Learning</span>
+
+        <!-- BOOKMARK -->
+
+        <div
+            class="nav-item"
+            onclick="changePage('bookmark', this)"
+        >
+
+            <i class="fa-solid fa-star"></i>
+
+            <span>
+                Bookmark
+            </span>
+
         </div>
 
-    </div>
 
-    <div class="profile">
-        M
-    </div>
+        <!-- TRACKING -->
+
+        <div
+            class="nav-item"
+            onclick="changePage('tracking', this)"
+        >
+
+            <i class="fa-solid fa-satellite-dish"></i>
+
+            <span>
+                Tracking
+            </span>
+
+        </div>
+
+
+        <!-- RANK -->
+
+        <div
+            class="nav-item"
+            onclick="changePage('rank', this)"
+        >
+
+            <i class="fa-solid fa-trophy"></i>
+
+            <span>
+                Rank
+            </span>
+
+        </div>
+
+
+    </nav>
+
+
+
+    <!-- =====================================
+         PAGE
+    ====================================== -->
+
+    <main
+        id="pageContent"
+        class="page"
+    >
+
+
+        <!-- HOME -->
+
+        <section id="homePage">
+
+
+            <!-- INTRO -->
+
+            <div class="home-intro">
+
+                <div class="home-heading">
+
+                    <i class="fa-solid fa-house"></i>
+
+                    <span>
+                        Home
+                    </span>
+
+                </div>
+
+                <p class="home-subtitle">
+                    Select your app to start quizzes.
+                </p>
+
+            </div>
+
+
+            <!-- SECTION -->
+
+            <div class="section-heading">
+
+                <h2>
+                    Test Series
+                </h2>
+
+                <span>
+                    Explore
+                </span>
+
+            </div>
+
+
+            <!-- =================================
+                 TEST CARD 1
+            ================================== -->
+
+            <div
+                class="course-card"
+                onclick="openTestSeries('3°')"
+            >
+
+                <div class="course-info">
+
+                    <div class="course-name">
+                        3°
+                    </div>
+
+                    <div class="course-description">
+                        Practice tests and exam preparation.
+                    </div>
+
+                    <div class="course-meta">
+
+                        <span class="meta-badge">
+                            2 folders
+                        </span>
+
+                        <span class="meta-badge">
+                            3 categories
+                        </span>
+
+                        <span class="meta-badge">
+                            212 tests
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="course-arrow">
+
+                    <i class="fa-solid fa-chevron-right"></i>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================
+                 TEST CARD 2
+            ================================== -->
+
+            <div
+                class="course-card"
+                onclick="openTestSeries('D')"
+            >
+
+                <div class="course-info">
+
+                    <div class="course-name">
+                        D
+                    </div>
+
+                    <div class="course-description">
+                        Medical and competitive test series.
+                    </div>
+
+                    <div class="course-meta">
+
+                        <span class="meta-badge">
+                            4 categories
+                        </span>
+
+                        <span class="meta-badge">
+                            65 tests
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="course-arrow">
+
+                    <i class="fa-solid fa-chevron-right"></i>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================
+                 TEST CARD 3
+            ================================== -->
+
+            <div
+                class="course-card"
+                onclick="openTestSeries('M')"
+            >
+
+                <div class="course-info">
+
+                    <div class="course-name">
+                        M
+                    </div>
+
+                    <div class="course-description">
+                        Complete mock test practice.
+                    </div>
+
+                    <div class="course-meta">
+
+                        <span class="meta-badge">
+                            21 categories
+                        </span>
+
+                        <span class="meta-badge">
+                            259 tests
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="course-arrow">
+
+                    <i class="fa-solid fa-chevron-right"></i>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================
+                 TEST CARD 4
+            ================================== -->
+
+            <div
+                class="course-card"
+                onclick="openTestSeries('N')"
+            >
+
+                <div class="course-info">
+
+                    <div class="course-name">
+                        N
+                    </div>
+
+                    <div class="course-description">
+                        Full test series collection.
+                    </div>
+
+                    <div class="course-meta">
+
+                        <span class="meta-badge">
+                            38 categories
+                        </span>
+
+                        <span class="meta-badge">
+                            899 tests
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="course-arrow">
+
+                    <i class="fa-solid fa-chevron-right"></i>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================
+                 TEST CARD 5
+            ================================== -->
+
+            <div
+                class="course-card"
+                onclick="openTestSeries('N-PRO')"
+            >
+
+                <div class="course-info">
+
+                    <div class="course-name">
+                        N-PRO
+                    </div>
+
+                    <div class="course-description">
+                        Premium test series for serious preparation.
+                    </div>
+
+                    <div class="course-meta">
+
+                        <span class="meta-badge">
+                            22 categories
+                        </span>
+
+                        <span class="meta-badge">
+                            1662 tests
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="course-arrow">
+
+                    <i class="fa-solid fa-chevron-right"></i>
+
+                </div>
+
+            </div>
+
+
+        </section>
+
+
+    </main>
+
+
+    <div class="bottom-space"></div>
+
 
 </div>
 
-<!-- MAIN -->
 
-<div class="container">
-
-    <div class="small-title">
-        Home
-    </div>
-
-    <div class="big-title">
-        Choose Your App
-    </div>
-
-    <div class="course-count">
-        13 total courses
-    </div>
-
-    <!-- SEARCH -->
-
-    <div class="search-box">
-        <i class="fa-solid fa-magnifying-glass"></i>
-
-        <input
-        type="text"
-        placeholder="Search courses..."
-        />
-    </div>
-
-    <!-- CARD 1 -->
-
-    <div class="course-card">
-
-        <div class="course-left">
-
-            <div class="course-small">
-                Concept Rna
-            </div>
-
-            <div class="course-title">
-                Concept Rna
-            </div>
-
-            <div class="batch">
-                1 Batches
-            </div>
-
-        </div>
-
-        <img
-        class="course-image"
-        src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f"
-        />
-
-    </div>
-
-    <!-- CARD 2 -->
-
-    <div class="course-card">
-
-        <div class="course-left">
-
-            <div class="course-small">
-                DAMS MBBS
-            </div>
-
-            <div class="course-title">
-                DAMS MBBS
-            </div>
-
-            <div class="batch">
-                2 Batches
-            </div>
-
-        </div>
-
-        <img
-        class="course-image"
-        src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3"
-        />
-
-    </div>
-
-    <!-- CARD 3 -->
-
-    <div class="course-card">
-
-        <div class="course-left">
-
-            <div class="course-small">
-                DAMS NURSING
-            </div>
-
-            <div class="course-title">
-                DAMS NURSING
-            </div>
-
-            <div class="batch">
-                1 Batches
-            </div>
-
-        </div>
-
-        <img
-        class="course-image"
-        src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b"
-        />
-
-    </div>
-
-    <div id="nnlPage" style="display:none; padding:30px; text-align:center;">
-    <h1>NNL</h1>
-    <div style="
-        background:white;
-        padding:25px;
-        border-radius:20px;
-        width:220px;
-        margin:30px auto;
-        box-shadow:0 2px 10px rgba(0,0,0,0.08);
-        font-size:24px;
-        cursor:pointer;
-    ">
-        📁 NNL
-    </div>
-</div>
-</div>
 
 <script>
 
-let tg = window.Telegram.WebApp;
-tg.expand();
+    /* =========================================
+       TELEGRAM
+    ========================================= */
 
-console.log(tg.initDataUnsafe);
+    const tg = window.Telegram?.WebApp;
 
-function setActive(element){
-    document.querySelectorAll('.nav-item').forEach(item=>{
-        item.classList.remove('active');
-    });
+    if (tg) {
 
-    element.classList.add('active');
-}
+        tg.ready();
 
-function openNNL(element){
+        tg.expand();
 
-    setActive(element);
+        /*
+         * This tells Telegram that our Mini App
+         * is ready to display.
+         */
 
-    document.querySelectorAll('.course-card').forEach(card=>{
-        card.style.display='none';
-    });
+    }
 
-    document.querySelector('.search-box').style.display='none';
-    document.querySelector('.course-count').style.display='none';
-    document.querySelector('.big-title').style.display='none';
-    document.querySelector('.small-title').innerText='Test Series';
 
-    document.getElementById('nnlPage').style.display='block';
-}
 
-function openHome(element){
+    /* =========================================
+       THEME
+    ========================================= */
 
-    setActive(element);
+    function toggleTheme() {
 
-    document.querySelectorAll('.course-card').forEach(card=>{
-        card.style.display='flex';
-    });
+        document.body.classList.toggle("dark");
 
-    document.querySelector('.search-box').style.display='flex';
-    document.querySelector('.course-count').style.display='block';
-    document.querySelector('.big-title').style.display='block';
-    document.querySelector('.small-title').innerText='Home';
+        const isDark =
+            document.body.classList.contains("dark");
 
-    document.getElementById('nnlPage').style.display='none';
-}
+        const icon =
+            document.getElementById("themeIcon");
+
+        if (isDark) {
+
+            icon.className =
+                "fa-solid fa-moon";
+
+            localStorage.setItem(
+                "norcetiq-theme",
+                "dark"
+            );
+
+        } else {
+
+            icon.className =
+                "fa-solid fa-sun";
+
+            localStorage.setItem(
+                "norcetiq-theme",
+                "light"
+            );
+
+        }
+
+    }
+
+
+
+    /* =========================================
+       LOAD SAVED THEME
+    ========================================= */
+
+    function loadTheme() {
+
+        const savedTheme =
+            localStorage.getItem(
+                "norcetiq-theme"
+            );
+
+        if (savedTheme === "dark") {
+
+            document.body.classList.add("dark");
+
+            document.getElementById(
+                "themeIcon"
+            ).className =
+                "fa-solid fa-moon";
+
+        }
+
+    }
+
+    loadTheme();
+
+
+
+    /* =========================================
+       NAVIGATION
+    ========================================= */
+
+    function changePage(page, element) {
+
+        /*
+         * Remove active from all buttons
+         */
+
+        document
+            .querySelectorAll(".nav-item")
+            .forEach(item => {
+
+                item.classList.remove("active");
+
+            });
+
+
+        /*
+         * Add active to clicked button
+         */
+
+        element.classList.add("active");
+
+
+        /*
+         * Home
+         */
+
+        if (page === "home") {
+
+            showHome();
+
+            return;
+        }
+
+
+        /*
+         * Other pages
+         */
+
+        const pageContent =
+            document.getElementById(
+                "pageContent"
+            );
+
+
+        const pageData = {
+
+            performance: {
+                icon: "fa-chart-column",
+                title: "Performance",
+                description:
+                    "Your test performance will appear here."
+            },
+
+            bookmark: {
+                icon: "fa-star",
+                title: "Bookmark",
+                description:
+                    "Your bookmarked questions will appear here."
+            },
+
+            tracking: {
+                icon: "fa-satellite-dish",
+                title: "Tracking",
+                description:
+                    "Track your preparation and progress here."
+            },
+
+            rank: {
+                icon: "fa-trophy",
+                title: "Rank",
+                description:
+                    "Your rank and leaderboard will appear here."
+            }
+
+        };
+
+
+        const data = pageData[page];
+
+
+        pageContent.innerHTML = `
+
+            <section class="placeholder-page">
+
+                <div class="placeholder-icon">
+
+                    <i class="fa-solid ${data.icon}"></i>
+
+                </div>
+
+                <h2>
+                    ${data.title}
+                </h2>
+
+                <p>
+                    ${data.description}
+                </p>
+
+            </section>
+
+        `;
+
+    }
+
+
+
+    /* =========================================
+       SHOW HOME
+    ========================================= */
+
+    function showHome() {
+
+        const pageContent =
+            document.getElementById(
+                "pageContent"
+            );
+
+        pageContent.innerHTML = `
+
+            <section id="homePage">
+
+                <div class="home-intro">
+
+                    <div class="home-heading">
+
+                        <i class="fa-solid fa-house"></i>
+
+                        <span>
+                            Home
+                        </span>
+
+                    </div>
+
+                    <p class="home-subtitle">
+                        Select your app to start quizzes.
+                    </p>
+
+                </div>
+
+
+                <div class="section-heading">
+
+                    <h2>
+                        Test Series
+                    </h2>
+
+                    <span>
+                        Explore
+                    </span>
+
+                </div>
+
+
+                ${createCard(
+                    "3°",
+                    "Practice tests and exam preparation.",
+                    ["2 folders", "3 categories", "212 tests"]
+                )}
+
+
+                ${createCard(
+                    "D",
+                    "Medical and competitive test series.",
+                    ["4 categories", "65 tests"]
+                )}
+
+
+                ${createCard(
+                    "M",
+                    "Complete mock test practice.",
+                    ["21 categories", "259 tests"]
+                )}
+
+
+                ${createCard(
+                    "N",
+                    "Full test series collection.",
+                    ["38 categories", "899 tests"]
+                )}
+
+
+                ${createCard(
+                    "N-PRO",
+                    "Premium test series for serious preparation.",
+                    ["22 categories", "1662 tests"]
+                )}
+
+            </section>
+
+        `;
+
+
+        /*
+         * Restore click events
+         */
+
+        document
+            .querySelectorAll(".course-card")
+            .forEach(card => {
+
+                card.addEventListener(
+                    "click",
+                    () => {
+
+                        const name =
+                            card.dataset.name;
+
+                        openTestSeries(name);
+
+                    }
+                );
+
+            });
+
+    }
+
+
+
+    /* =========================================
+       CREATE CARD
+    ========================================= */
+
+    function createCard(
+        name,
+        description,
+        badges
+    ) {
+
+        return `
+
+            <div
+                class="course-card"
+                data-name="${name}"
+            >
+
+                <div class="course-info">
+
+                    <div class="course-name">
+                        ${name}
+                    </div>
+
+                    <div class="course-description">
+                        ${description}
+                    </div>
+
+                    <div class="course-meta">
+
+                        ${badges.map(
+                            badge => `
+                                <span class="meta-badge">
+                                    ${badge}
+                                </span>
+                            `
+                        ).join("")}
+
+                    </div>
+
+                </div>
+
+
+                <div class="course-arrow">
+
+                    <i class="fa-solid fa-chevron-right"></i>
+
+                </div>
+
+            </div>
+
+        `;
+
+    }
+
+
+
+    /* =========================================
+       TEST SERIES
+    ========================================= */
+
+    function openTestSeries(name) {
+
+        alert(
+            name +
+            " test series selected."
+        );
+
+        /*
+         * IMPORTANT:
+         *
+         * We will replace this alert later
+         * with your real folder/category
+         * navigation.
+         */
+
+    }
+
+
+
+    /* =========================================
+       NOTIFICATIONS
+    ========================================= */
+
+    function openNotifications() {
+
+        alert(
+            "Notifications will be added later."
+        );
+
+    }
+
+
+
+    /* =========================================
+       PROFILE
+    ========================================= */
+
+    function openProfile() {
+
+        alert(
+            "Student profile will be added later."
+        );
+
+    }
 
 </script>
+
+
 </body>
 </html>
