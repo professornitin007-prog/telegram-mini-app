@@ -658,6 +658,129 @@
             }
         }
 
+
+    /* =========================================
+   FOLDER / TEST SERIES PAGE
+========================================= */
+
+.folder-page {
+    padding: 16px;
+}
+
+
+/* HEADER CARD */
+
+.folder-header {
+    background: rgba(255, 255, 255, 0.75);
+    border-radius: 28px;
+    padding: 24px 20px;
+    margin-bottom: 18px;
+    box-shadow: 0 3px 15px rgba(80, 40, 100, 0.08);
+}
+
+
+/* BACK BUTTON */
+
+.back-button {
+    border: none;
+    background: #eee8f8;
+    color: #5d32a8;
+    font-size: 18px;
+    font-weight: 700;
+    padding: 14px 22px;
+    border-radius: 20px;
+    cursor: pointer;
+    margin-bottom: 8px;
+}
+
+
+/* PAGE TITLE */
+
+.folder-header h1 {
+    margin: 0;
+    font-size: 34px;
+    color: #4b315d;
+    font-weight: 800;
+}
+
+
+/* DESCRIPTION */
+
+.folder-header p {
+    margin: 12px 0 0;
+    font-size: 17px;
+    color: #796b83;
+}
+
+
+/* FOLDER CARD */
+
+.folder-card {
+    display: flex;
+    align-items: center;
+
+    background: rgba(255, 255, 255, 0.78);
+
+    border-radius: 25px;
+
+    padding: 22px 18px;
+
+    margin-bottom: 16px;
+
+    box-shadow: 0 3px 14px rgba(80, 40, 100, 0.07);
+
+    cursor: pointer;
+
+    transition: transform 0.15s ease;
+}
+
+
+.folder-card:active {
+    transform: scale(0.98);
+}
+
+
+/* FOLDER ICON */
+
+.folder-icon {
+    font-size: 30px;
+    margin-right: 12px;
+}
+
+
+/* TEXT AREA */
+
+.folder-info {
+    flex: 1;
+}
+
+
+.folder-title {
+    font-size: 22px;
+    font-weight: 800;
+    color: #4b315d;
+    line-height: 1.25;
+}
+
+
+.folder-meta {
+    margin-top: 5px;
+    font-size: 16px;
+    color: #76677f;
+    line-height: 1.35;
+}
+
+
+/* ARROW */
+
+.folder-arrow {
+    font-size: 30px;
+    color: #7950b5;
+    margin-left: 10px;
+}
+
+
+
     </style>
 </head>
 
@@ -1504,20 +1627,199 @@
 
     function openTestSeries(name) {
 
-        alert(
-            name +
-            " test series selected."
-        );
+    const pageContent = document.getElementById("pageContent");
 
-        /*
-         * IMPORTANT:
-         *
-         * We will replace this alert later
-         * with your real folder/category
-         * navigation.
-         */
+    // ==============================
+    // 3 DEGREE
+    // ==============================
 
+    if (name === "3°") {
+
+        pageContent.innerHTML = `
+
+            <section class="folder-page">
+
+                <!-- HEADER CARD -->
+                <div class="folder-header">
+
+                    <button class="back-button" onclick="showHome()">
+                        ← Back
+                    </button>
+
+                    <h1>3°</h1>
+
+                    <p>Choose folder</p>
+
+                </div>
+
+
+                <!-- FOLDER 1 -->
+
+                <div
+                    class="folder-card"
+                    onclick="openThreeDegreeSeries()"
+                >
+
+                    <div class="folder-icon">
+                        📁
+                    </div>
+
+                    <div class="folder-info">
+
+                        <div class="folder-title">
+                            3 Degree Test Series
+                        </div>
+
+                        <div class="folder-meta">
+                            1 categories • 172 tests • 17638 questions
+                        </div>
+
+                    </div>
+
+                    <div class="folder-arrow">
+                        ›
+                    </div>
+
+                </div>
+
+
+                <!-- FOLDER 2 -->
+
+                <div class="folder-card">
+
+                    <div class="folder-icon">
+                        📁
+                    </div>
+
+                    <div class="folder-info">
+
+                        <div class="folder-title">
+                            NORCET (Pre + Mains) 40 TEST Series
+                        </div>
+
+                        <div class="folder-meta">
+                            2 categories • 40 tests • 5200 questions
+                        </div>
+
+                    </div>
+
+                    <div class="folder-arrow">
+                        ›
+                    </div>
+
+                </div>
+
+            </section>
+        `;
     }
+
+    // ==============================
+    // OTHER SERIES - TEMPORARY
+    // ==============================
+
+    else {
+
+        pageContent.innerHTML = `
+
+            <section class="folder-page">
+
+                <div class="folder-header">
+
+                    <button class="back-button" onclick="showHome()">
+                        ← Back
+                    </button>
+
+                    <h1>${name}</h1>
+
+                    <p>Choose folder or category</p>
+
+                </div>
+
+                <div class="folder-card">
+
+                    <div class="folder-icon">
+                        📁
+                    </div>
+
+                    <div class="folder-info">
+
+                        <div class="folder-title">
+                            ${name} Test Series
+                        </div>
+
+                        <div class="folder-meta">
+                            Categories and tests coming soon
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+        `;
+    }
+}
+
+       function openThreeDegreeSeries() {
+
+    const pageContent = document.getElementById("pageContent");
+
+    pageContent.innerHTML = `
+
+        <section class="folder-page">
+
+            <!-- HEADER -->
+
+            <div class="folder-header">
+
+                <button
+                    class="back-button"
+                    onclick="openTestSeries('3°')"
+                >
+                    ← Back
+                </button>
+
+                <h1>3 Degree Test Series</h1>
+
+                <p>
+                    Path: 3 Degree Test Series
+                </p>
+
+                <p>
+                    Choose sub folder or category
+                </p>
+
+            </div>
+
+
+            <!-- TEST CATEGORY -->
+
+            <div
+                class="folder-card"
+                onclick="openTestList()"
+            >
+
+                <div class="folder-info">
+
+                    <div class="folder-title">
+                        Test(1-20)
+                    </div>
+
+                    <div class="folder-meta">
+                        172 tests • 17638 questions
+                    </div>
+
+                </div>
+
+                <div class="folder-arrow">
+                    ›
+                </div>
+
+            </div>
+
+        </section>
+    `;
+}
 
 
 
