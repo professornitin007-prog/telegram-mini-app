@@ -853,6 +853,129 @@
 }
 
 
+
+.question-page {
+    padding: 16px;
+}
+
+.question-header {
+    margin-bottom: 15px;
+}
+
+.question-progress {
+    margin-top: 15px;
+    font-size: 17px;
+    font-weight: 700;
+    color: #6542a8;
+}
+
+.question-card {
+    background: white;
+    border-radius: 24px;
+    padding: 22px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+}
+
+.question-number {
+    color: #7045b5;
+    font-weight: 800;
+    margin-bottom: 12px;
+}
+
+.question-text {
+    font-size: 21px;
+    line-height: 1.45;
+    color: #34263d;
+}
+
+.options {
+    margin-top: 20px;
+}
+
+.option-button {
+    width: 100%;
+    text-align: left;
+    border: 2px solid #e6dff0;
+    background: white;
+    padding: 16px;
+    border-radius: 16px;
+    margin-bottom: 12px;
+    font-size: 17px;
+    cursor: pointer;
+}
+
+.option-button.correct {
+    border-color: #22a447;
+    background: #e9f8ed;
+}
+
+.option-button.wrong {
+    border-color: #e53935;
+    background: #ffebeb;
+}
+
+.answer-result {
+    padding: 15px;
+    border-radius: 15px;
+    margin-top: 15px;
+    font-weight: 800;
+}
+
+.correct-result {
+    background: #e9f8ed;
+    color: #168b39;
+}
+
+.wrong-result {
+    background: #ffebeb;
+    color: #d62929;
+}
+
+.solution-button {
+    width: 100%;
+    border: none;
+    background: #eee6ff;
+    color: #6339a4;
+    padding: 15px;
+    border-radius: 16px;
+    margin-top: 15px;
+    font-size: 17px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.solution-box {
+    margin-top: 15px;
+    padding: 18px;
+    background: #f7f3fc;
+    border-radius: 18px;
+}
+
+.solution-title {
+    font-size: 18px;
+    font-weight: 800;
+    margin-bottom: 8px;
+    color: #5f329f;
+}
+
+.solution-text {
+    line-height: 1.6;
+    color: #45384c;
+}
+
+.next-button {
+    width: 100%;
+    border: none;
+    background: #6d3db3;
+    color: white;
+    padding: 16px;
+    border-radius: 16px;
+    margin-top: 15px;
+    font-size: 17px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
 </style>
 
 </head>
@@ -1444,7 +1567,7 @@
 
 </div>
 
-
+<script src="test1.js"></script>
 
 <script>
 
@@ -2203,13 +2326,287 @@ function openTestPattern() {
 /* =========================================
    REVIEW MODE
 ========================================= */
-
 function startReviewMode() {
 
-    alert("Review Mode selected — 100 questions will open here.");
+
+    let currentQuestion = 0;
+let selectedAnswer = null;
+
+
+function renderQuestion() {
+
+    const question =
+        TEST1_QUESTIONS[currentQuestion];
+
+    const container =
+        document.getElementById("questionContainer");
+
+    selectedAnswer = null;
+
+    container.innerHTML = `
+
+        <div class="question-card">
+
+            <div class="question-number">
+                Question ${currentQuestion + 1}
+            </div>
+
+            <h2 class="question-text">
+                ${question.question}
+            </h2>
+
+
+            <div class="options">
+
+                ${question.options.map((option, index) => `
+
+                    <button
+                        class="option-button"
+                        onclick="selectAnswer(${index})"
+                        id="option-${index}"
+                    >
+                        <span>
+                            ${String.fromCharCode(65 + index)}.
+                        </span>
+
+                        ${option}
+
+                    </button>
+
+                `).join("")}
+
+            </div>
+
+
+            <div
+                id="answerResult"
+                class="answer-result"
+                style="display:none;"
+            ></div>
+
+
+            <button
+                id="solutionButton"
+                class="solution-button"
+                onclick="showSolution()"
+                style="display:none;"
+            >
+                💡 Solution
+            </button>
+
+
+            <button
+                id="nextButton"
+                class="next-button"
+                onclick="nextQuestion()"
+                style="display:none;"
+            >
+                Next Question →
+            </button>
+
+        </div>
+
+    `;
+}
+
+function selectAnswer(selectedIndex) {
+
+    if (selectedAnswer !== null) {
+        return;
+    }
+
+    selectedAnswer = selectedIndex;
+
+    const question =
+        TEST1_QUESTIONS[currentQuestion];
+
+
+    const buttons =
+        document.querySelectorAll(".option-button");
+
+
+    buttons.forEach(button => {
+        button.disabled = true;
+    });
+
+
+    const selectedButton =
+        document.getElementById(
+            `option-${selectedIndex}`
+        );
+
+
+    const correctButton =
+        document.getElementById(
+            `option-${question.answer}`
+        );
+
+
+    if (selectedIndex === question.answer) {
+
+        selectedButton.classList.add("correct");
+
+        document.getElementById(
+            "answerResult"
+        ).innerHTML = "🟢 Correct Answer";
+
+        document.getElementById(
+            "answerResult"
+        ).className = "answer-result correct-result";
+
+    } else {
+
+        selectedButton.classList.add("wrong");
+
+        correctButton.classList.add("correct");
+
+        document.getElementById(
+            "answerResult"
+        ).innerHTML =
+            "🔴 Wrong Answer";
+
+        document.getElementById(
+            "answerResult"
+        ).className =
+            "answer-result wrong-result";
+
+    }
+
+
+    document.getElementById(
+        "answerResult"
+    ).style.display = "block";
+
+
+    document.getElementById(
+        "solutionButton"
+    ).style.display = "block";
+
+
+    document.getElementById(
+        "nextButton"
+    ).style.display = "block";
 
 }
 
+
+function showSolution() {
+
+    const question =
+        TEST1_QUESTIONS[currentQuestion];
+
+    let solutionBox =
+        document.getElementById("solutionBox");
+
+
+    if (!solutionBox) {
+
+        solutionBox =
+            document.createElement("div");
+
+        solutionBox.id = "solutionBox";
+
+        solutionBox.className =
+            "solution-box";
+
+        document
+            .getElementById("questionContainer")
+            .appendChild(solutionBox);
+
+    }
+
+
+    solutionBox.innerHTML = `
+
+        <div class="solution-title">
+            💡 Solution
+        </div>
+
+        <div class="solution-text">
+            ${question.solution}
+        </div>
+
+    `;
+
+}
+
+
+
+function nextQuestion() {
+
+    if (
+        currentQuestion >=
+        TEST1_QUESTIONS.length - 1
+    ) {
+
+        document.getElementById(
+            "questionContainer"
+        ).innerHTML = `
+
+            <div class="question-card">
+
+                <h2>🎉 Test Completed</h2>
+
+                <p>
+                    You have completed
+                    ${TEST1_QUESTIONS.length}
+                    questions.
+                </p>
+
+            </div>
+
+        `;
+
+        return;
+    }
+
+
+    currentQuestion++;
+
+    renderQuestion();
+
+}
+
+
+
+
+
+
+
+
+    const pageContent =
+        document.getElementById("pageContent");
+
+    pageContent.innerHTML = `
+
+        <section class="question-page">
+
+            <div class="question-header">
+
+                <button
+                    class="back-button"
+                    onclick="openTestPattern()"
+                >
+                    ← Back
+                </button>
+
+                <div class="question-progress">
+                    Question 1 of ${TEST1_QUESTIONS.length}
+                </div>
+
+            </div>
+
+            <div id="questionContainer"></div>
+
+        </section>
+
+    `;
+
+    currentQuestion = 0;
+
+    renderQuestion();
+
+}
 
 /* =========================================
    PRACTICE MODE
